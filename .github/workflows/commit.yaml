@@ -1,0 +1,144 @@
+name: Commit
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build OCI Image
+    permissions: write-all
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [alpine, debian]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@9becc617647dfa20ae7b1151972e9b3a2c338a2b
+
+      - name: Run Hadolint
+        id: hadolint
+        uses: hadolint/hadolint-action@f988afea3da57ee48710a9795b6bb677cc901183
+        continue-on-error: true
+        with:
+          dockerfile: ./${{ matrix.os }}.dockerfile
+          format: sarif
+          output-file: hadolint.sarif
+          no-fail: false
+
+      - name: Upload Hadolint SARIF report
+        uses: github/codeql-action/upload-sarif@ec3cf9c605b848da5f1e41e8452719eb1ccfb9a6
+        with:
+          category: hadolint
+          sarif_file: hadolint.sarif
+
+      - name: Generate OCI image metadata
+        id: metadata
+        uses: docker/metadata-action@57396166ad8aefe6098280995947635806a0e6ea
+        with:
+          flavor: |
+            latest=false
+          images: |
+            ghcr.io/${{ github.repository }}
+            docker.io/${{ github.repository }}
+          tags: |
+            type=raw,value=${{ matrix.os }}-main
+            type=raw,value=main,enable=${{ matrix.os == 'alpine' }}
+          labels: |
+            org.opencontainers.image.description=Fluentd aggregator OCI image based on the default Fluentd OCI image.
+            org.opencontainers.image.authors=Fluentd developers <fluentd@googlegroups.com>
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@e81a89b1732b9c48d79cd809d8d81d79c4647a18
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@8c0edbc76e98fa90f69d9a2c020dcb50019dc325
+
+      - name: Build OCI image
+        id: build
+        uses: docker/build-push-action@c56af957549030174b10d6867f20e78cfd7debc5
+        with:
+          file: ./${{ matrix.os }}.dockerfile
+          context: .
+          platforms: linux/amd64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          load: true
+          push: false
+
+      - name: Generate OCI image SBOM
+        uses: anchore/sbom-action@b7e8507c6a3c89b7099a0198366d862c8f3ad8f1
+        with:
+          image: "ghcr.io/${{ github.repository }}:${{ matrix.os }}-main"
+          dependency-snapshot: true
+          format: spdx-json
+          artifact-name: ${{ github.event.repository.name }}-sbom.spdx.json
+          output-file: ${{ github.event.repository.name }}-sbom.spdx.json
+
+      - name: Scan OCI image SBOM with Grype
+        id: scan
+        uses: anchore/scan-action@d5aa5b6cb9414b0c7771438046ff5bcfa2854ed7
+        continue-on-error: true
+        with:
+          sbom: ${{ github.event.repository.name }}-sbom.spdx.json
+          severity-cutoff: medium
+          output-format: sarif
+          fail-build: true
+
+      - name: Upload Grype SARIF report
+        uses: github/codeql-action/upload-sarif@ec3cf9c605b848da5f1e41e8452719eb1ccfb9a6
+        with:
+          category: grype
+          sarif_file: ${{ steps.scan.outputs.sarif }}
+
+      - name: Fail workflow
+        if: ${{ steps.hadolint.outcome == 'failure' && steps.scan.outcome == 'failure' }}
+        run: |
+          set -euo pipefail
+          echo "::error::Code scanning failed."
+          exit 1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to DockerHub
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build & push OCI image
+        id: build_push
+        uses: docker/build-push-action@c56af957549030174b10d6867f20e78cfd7debc5
+        with:
+          file: ./${{ matrix.os }}.dockerfile
+          context: .
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          load: false
+          push: true
+
+      - name: Sign OCI image
+        env:
+          COSIGN_EXPERIMENTAL: true
+        run: |
+          set -euo pipefail
+          cosign sign --yes --recursive ghcr.io/${{ github.repository }}:main@${{ steps.build_push.outputs.digest }}
+          cosign sign --yes --recursive docker.io/${{ github.repository }}:main@${{ steps.build_push.outputs.digest }}

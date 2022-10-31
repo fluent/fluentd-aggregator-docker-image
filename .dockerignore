@@ -1,0 +1,9 @@
+# Ignore everything
+*
+
+# Allow files and directories
+!Gemfile
+!Gemfile.lock
+!fluent.conf
+!fluent.yaml
+!entrypoint.sh
