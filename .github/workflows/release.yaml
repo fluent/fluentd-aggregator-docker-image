@@ -47,7 +47,7 @@ jobs:
             latest=false
           images: |
             ghcr.io/${{ github.repository }}
-            docker.io/${{ github.repository }}
+            docker.io/${{ secrets.DOCKERHUB_REPO }}
           tags: |
             type=semver,pattern=${{ matrix.os }}-{{version}}
             type=semver,pattern=${{ matrix.os }}-{{major}}.{{minor}}
@@ -146,7 +146,7 @@ jobs:
         run: |
           set -euo pipefail
           cosign sign --yes --recursive ghcr.io/${{ github.repository }}:${{ steps.metadata.outputs.version }}@${{ steps.build_push.outputs.digest }}
-          cosign sign --yes --recursive docker.io/${{ github.repository }}:${{ steps.metadata.outputs.version }}@${{ steps.build_push.outputs.digest }}
+          cosign sign --yes --recursive docker.io/${{ secrets.DOCKERHUB_REPO }}:${{ steps.metadata.outputs.version }}@${{ steps.build_push.outputs.digest }}
 
       - name: Update Docker repository description
         uses: peter-evans/dockerhub-description@14881160433a81f9ebc838a253d4edd9e8fc35f1

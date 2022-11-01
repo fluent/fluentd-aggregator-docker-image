@@ -48,7 +48,7 @@ jobs:
             latest=false
           images: |
             ghcr.io/${{ github.repository }}
-            docker.io/${{ github.repository }}
+            docker.io/${{ secrets.DOCKERHUB_REPO }}
           tags: |
             type=raw,value=${{ matrix.os }}-main
             type=raw,value=main,enable=${{ matrix.os == 'alpine' }}
@@ -141,4 +141,4 @@ jobs:
         run: |
           set -euo pipefail
           cosign sign --yes --recursive ghcr.io/${{ github.repository }}:main@${{ steps.build_push.outputs.digest }}
-          cosign sign --yes --recursive docker.io/${{ github.repository }}:main@${{ steps.build_push.outputs.digest }}
+          cosign sign --yes --recursive docker.io/${{ secrets.DOCKERHUB_REPO }}:main@${{ steps.build_push.outputs.digest }}
