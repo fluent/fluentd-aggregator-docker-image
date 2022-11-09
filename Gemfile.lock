@@ -147,7 +147,7 @@ GEM
       aws-sdk-sqs (~> 1)
       fluentd (>= 0.12.0, < 2)
       yajl-ruby (~> 1.0)
-    fluentd (1.15.2)
+    fluentd (1.15.3)
       bundler
       cool.io (>= 1.4.5, < 2.0.0)
       http_parser.rb (>= 0.5.1, < 0.9.0)
@@ -176,7 +176,7 @@ GEM
       connection_pool (~> 2.2)
     netrc (0.11.0)
     nio4r (2.5.8)
-    oj (3.13.21)
+    oj (3.13.23)
     opensearch-api (2.0.2)
       multi_json
     opensearch-ruby (2.0.3)
@@ -212,7 +212,7 @@ GEM
       ethon (>= 0.9.0)
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
-    tzinfo-data (1.2022.5)
+    tzinfo-data (1.2022.6)
       tzinfo (>= 1.0.0)
     unf (0.1.4)
       unf_ext
@@ -222,10 +222,10 @@ GEM
     yajl-ruby (1.4.3)
 
 PLATFORMS
-  x86_64-linux
-  x86_64-linux-musl
   aarch64-linux
   aarch64-linux-musl
+  x86_64-linux
+  x86_64-linux-musl
 
 DEPENDENCIES
   async (= 1.30.3)
@@ -245,9 +245,9 @@ DEPENDENCIES
   fluent-plugin-route (= 1.0.0)
   fluent-plugin-s3 (= 1.7.2)
   fluent-plugin-sqs (= 3.0.0)
-  fluentd (= 1.15.2)
+  fluentd (= 1.15.3)
   json (= 2.6.2)
-  oj (= 3.13.21)
+  oj (= 3.13.23)
 
 BUNDLED WITH
    2.3.7
