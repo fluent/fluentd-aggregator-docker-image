@@ -30,7 +30,7 @@ jobs:
           no-fail: true
 
       - name: Upload Hadolint SARIF report
-        uses: github/codeql-action/upload-sarif@ec3cf9c605b848da5f1e41e8452719eb1ccfb9a6
+        uses: github/codeql-action/upload-sarif@c3b6fce4ee2ca25bc1066aa3bf73962fda0e8898
         with:
           category: hadolint
           sarif_file: hadolint.sarif
@@ -67,7 +67,7 @@ jobs:
           push: false
 
       - name: Generate OCI image SBOM
-        uses: anchore/sbom-action@b7e8507c6a3c89b7099a0198366d862c8f3ad8f1
+        uses: anchore/sbom-action@06e109483e6aa305a2b2395eabae554e51530e1d
         with:
           image: "${{ github.repository }}:${{ matrix.os }}-local"
           dependency-snapshot: true
@@ -77,7 +77,7 @@ jobs:
 
       - name: Scan OCI image SBOM with Grype
         id: scan
-        uses: anchore/scan-action@d5aa5b6cb9414b0c7771438046ff5bcfa2854ed7
+        uses: anchore/scan-action@3578976016e97642035dd9a0be842060e62422c6
         with:
           sbom: ${{ github.event.repository.name }}-sbom.spdx.json
           severity-cutoff: medium
@@ -85,7 +85,7 @@ jobs:
           fail-build: false
 
       - name: Upload Grype SARIF report
-        uses: github/codeql-action/upload-sarif@ec3cf9c605b848da5f1e41e8452719eb1ccfb9a6
+        uses: github/codeql-action/upload-sarif@c3b6fce4ee2ca25bc1066aa3bf73962fda0e8898
         with:
           category: grype
           sarif_file: ${{ steps.scan.outputs.sarif }}
