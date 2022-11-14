@@ -4,14 +4,24 @@ updates:
     directory: /
     schedule:
       interval: daily
+    commit-message:
+      prefix: chore
+      include: scope
   - package-ecosystem: docker
     directory: /
     schedule:
       interval: daily
+    commit-message:
+      prefix: feat
+      include: scope
   - package-ecosystem: bundler
     directory: /
     ignore:
       - dependency-name: async
         versions: [">=2"]
+    commit-message:
+      prefix: feat
+      prefix-development: chore
+      include: scope
     schedule:
       interval: daily
