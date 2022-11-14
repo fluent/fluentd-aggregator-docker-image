@@ -25,7 +25,7 @@ jobs:
         uses: sigstore/cosign-installer@9becc617647dfa20ae7b1151972e9b3a2c338a2b
 
       - name: Run Hadolint
-        uses: hadolint/hadolint-action@f988afea3da57ee48710a9795b6bb677cc901183
+        uses: hadolint/hadolint-action@4b5806eb9c6bee4954fc0e0cc3ad6175fc9782c1
         continue-on-error: true
         with:
           dockerfile: ./${{ matrix.os }}.dockerfile
@@ -157,7 +157,7 @@ jobs:
 
       - name: Get changelog entry
         id: changelog_reader
-        uses: mindsers/changelog-reader-action@17b72bf66059b7ac310abdc0b511948903e85ea5
+        uses: mindsers/changelog-reader-action@8f405204c383ffc2ff8646e9ae4daf7aa3a8b213
         with:
           path: ./CHANGELOG.md
           version: v${{ steps.metadata.outputs.version }}
