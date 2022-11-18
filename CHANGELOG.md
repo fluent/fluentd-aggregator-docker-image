@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-<!-- ## [vX.Y.Z] - UNRELEASED### Highlights
+<!-- ## [vX.Y.Z] - UNRELEASED
+### Highlights
 ### All Changes
 - Added
 - Updated
@@ -16,8 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deprecated
 - Removed -->
 
-## [v0.0.1] - UNRELEASED
+## [v1.0.0] - UNRELEASED
 
 ### All Changes
 
-- Added initial version.
+- Added initial version based on Fluentd [v1.15.3](https://github.com/fluent/fluentd/releases/tag/v1.15.3).
