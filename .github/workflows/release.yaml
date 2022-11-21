@@ -153,14 +153,14 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          repository: ${{ github.repository }}
+          repository: ${{ secrets.DOCKERHUB_REPO }}
 
       - name: Get changelog entry
         id: changelog_reader
         uses: mindsers/changelog-reader-action@8f405204c383ffc2ff8646e9ae4daf7aa3a8b213
         with:
           path: ./CHANGELOG.md
-          version: v${{ steps.metadata.outputs.version }}
+          version: ${{ github.ref_name }}
 
       - name: Create release
         uses: ncipollo/release-action@4c75f0f2e4ae5f3c807cf0904605408e319dcaac
