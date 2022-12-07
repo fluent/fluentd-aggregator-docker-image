@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated `json` from `v2.6.2` to `v2.6.3`. ([#34](https://github.com/fluent/fluentd-aggregator-docker-image/pull/34)) [@stevehipwell](https://github.com/stevehipwell)
 - Added `libxml-ruby` to support AWS gems. ([#34](https://github.com/fluent/fluentd-aggregator-docker-image/pull/34)) [@stevehipwell](https://github.com/stevehipwell)
 - Updated _Alpine_ from `v3.16.3` to `v3.17.0`. ([#34](https://github.com/fluent/fluentd-aggregator-docker-image/pull/34)) [@stevehipwell](https://github.com/stevehipwell)
+- Updated _Debian_ from `v3.1.2-slim-bullseye` to `v3.1.3-slim-bullseye`. ([#34](https://github.com/fluent/fluentd-aggregator-docker-image/pull/34)) [@stevehipwell](https://github.com/stevehipwell)
 
 ## [v1.0.0] - 2022-11-21
 
