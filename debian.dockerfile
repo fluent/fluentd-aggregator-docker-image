@@ -1,4 +1,4 @@
-FROM ruby:3.1.2-slim-bullseye
+FROM ruby:3.1.3-slim-bullseye
 
 ENV FLUENTD_DISABLE_BUNDLER_INJECTION="1"
 
@@ -9,10 +9,14 @@ COPY Gemfile Gemfile.lock /fluentd/
 # therefore an 'apt-get purge' has no effect
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
-  ca-certificates libjemalloc2 tini \
+  ca-certificates \
+  libjemalloc2 \
+  libxml2 libxslt1.1 \
+  tini \
   && buildDeps=" \
   make gcc g++ libc-dev \
   wget bzip2 gnupg dirmngr \
+  libxml2-dev libxslt1-dev \
   " \
   && apt-get install -y --no-install-recommends $buildDeps \
   && echo 'gem: --no-document' >> /etc/gemrc \

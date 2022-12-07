@@ -17,8 +17,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deprecated
 - Removed -->
 
+## [v1.1.0] - 2022-12-07
+
+### All Changes
+
+- Updated `fluent-plugin-opensearch` to `v1.0.9`. ([#34](https://github.com/fluent/fluentd-aggregator-docker-image/pull/34)) [@stevehipwell](https://github.com/stevehipwell)
+- Updated `json` from `v2.6.2` to `v2.6.3`. ([#34](https://github.com/fluent/fluentd-aggregator-docker-image/pull/34)) [@stevehipwell](https://github.com/stevehipwell)
+- Added `libxml-ruby` to support AWS gems. ([#34](https://github.com/fluent/fluentd-aggregator-docker-image/pull/34)) [@stevehipwell](https://github.com/stevehipwell)
+- Updated _Alpine_ from `v3.16.3` to `v3.17.0`. ([#34](https://github.com/fluent/fluentd-aggregator-docker-image/pull/34)) [@stevehipwell](https://github.com/stevehipwell)
+- Updated _Debian_ from `v3.1.2-slim-bullseye` to `v3.1.3-slim-bullseye`. ([#34](https://github.com/fluent/fluentd-aggregator-docker-image/pull/34)) [@stevehipwell](https://github.com/stevehipwell)
+
 ## [v1.0.0] - 2022-11-21
 
 ### All Changes
 
-- Added initial version based on Fluentd [v1.15.3](https://github.com/fluent/fluentd/releases/tag/v1.15.3).
+- Added initial version based on Fluentd [v1.15.3](https://github.com/fluent/fluentd/releases/tag/v1.15.3). [@stevehipwell](https://github.com/stevehipwell)
