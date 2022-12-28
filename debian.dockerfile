@@ -1,4 +1,4 @@
-FROM ruby:3.1.3-slim-bullseye
+FROM ruby:3.2.0-slim-bullseye
 
 ENV FLUENTD_DISABLE_BUNDLER_INJECTION="1"
 
