@@ -25,7 +25,7 @@ jobs:
         uses: sigstore/cosign-installer@9becc617647dfa20ae7b1151972e9b3a2c338a2b # v2.8.1
 
       - name: Run Hadolint
-        uses: hadolint/hadolint-action@4b5806eb9c6bee4954fc0e0cc3ad6175fc9782c1 # v3.0.0
+        uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf # v3.1.0
         continue-on-error: true
         with:
           dockerfile: ./${{ matrix.os }}.dockerfile
