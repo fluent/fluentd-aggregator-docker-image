@@ -78,7 +78,7 @@ jobs:
           push: false
 
       - name: Generate OCI image Syft SBOM
-        uses: anchore/sbom-action@06e109483e6aa305a2b2395eabae554e51530e1d # v0.13.1
+        uses: anchore/sbom-action@54e36e45f34bc64728f51adb8044404daca492a6 # v0.13.2
         with:
           image: "ghcr.io/${{ github.repository }}:${{ steps.metadata.outputs.version }}"
           dependency-snapshot: true
