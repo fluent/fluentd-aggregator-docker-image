@@ -17,6 +17,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deprecated
 - Removed -->
 
+## [v1.2.0] - 2023-02-06
+
+### All Changes
+
+- Updated [Alpine](https://www.alpinelinux.org/) base image from `v3.17.0` to `v3.17.1` (still Ruby `v3.1.3`).
+- Updated Debian Ruby base image from `v3.1.3-slim-bullseye` to `v3.2.0-slim-bullseye`.
+- Updated [libxml-ruby](https://github.com/xml4r/libxml-ruby) Gem from `v3.2.4` to `v4.0.0`.
+- Updated [async-http](https://github.com/socketry/async-http) Gem from `v0.59.3` to `v0.60.1`.
+- Updated [oj](https://github.com/ohler55/oj) from `v3.13.23` to `v3.14.1`.
+
 ## [v1.1.0] - 2022-12-07
 
 ### All Changes
