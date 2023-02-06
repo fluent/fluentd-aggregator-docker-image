@@ -1,4 +1,4 @@
-FROM ruby:3.2.0-slim-bullseye
+FROM ruby:3.2.0-slim-bullseye@sha256:f2f2747508c05c6e0b21fc015ef7f0f577e6f644ffc450350d67b85995c23dd5
 
 ENV FLUENTD_DISABLE_BUNDLER_INJECTION="1"
 
