@@ -94,7 +94,7 @@ jobs:
 
       - name: Scan OCI image Syft SBOM with Grype
         id: scan
-        uses: anchore/scan-action@84aa2c1d0eba986ed2274869c27f1e35a625449f # v3.3.3
+        uses: anchore/scan-action@4be3c24559b430723e51858969965e163b196957 # v3.3.5
         continue-on-error: true
         with:
           sbom: ${{ github.event.repository.name }}-${{ matrix.os }}-syft-sbom.spdx.json
