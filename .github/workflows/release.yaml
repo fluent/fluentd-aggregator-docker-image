@@ -69,7 +69,7 @@ jobs:
 
       - name: Build OCI image
         id: build
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671 # v4.0.0
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
         with:
           file: ./${{ matrix.os }}.dockerfile
           context: .
@@ -130,7 +130,7 @@ jobs:
 
       - name: Build & push OCI image
         id: build_push
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671 # v4.0.0
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
         with:
           file: ./${{ matrix.os }}.dockerfile
           context: .
