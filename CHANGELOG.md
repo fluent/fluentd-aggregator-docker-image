@@ -14,6 +14,8 @@
 
 ## [UNRELEASED]
 
+## [v2.0.0-rc.1] - 2026-07-06
+
 ### Changed
 
 - Realigned to original [stevehipwell/fluentd-aggregator](https://github.com/stevehipwell/fluentd-aggregator) source. ([#113](https://github.com/stevehipwell/fluentd-aggregator-docker-image/pull/113)) @stevehipwell
@@ -47,7 +49,8 @@
 <!--
 RELEASE LINKS
 -->
-[UNRELEASED]: https://github.com/fluent/fluentd-aggregator-docker-image/compare/v1.2.0...HEAD
+[UNRELEASED]: https://github.com/fluent/fluentd-aggregator-docker-image/compare/v2.0.0-rc.1...HEAD
+[v2.0.0-rc.1]: https://github.com/fluent/fluentd-aggregator-docker-image/releases/tag/v2.0.0-rc.1
 [v1.2.0]: https://github.com/fluent/fluentd-aggregator-docker-image/releases/tag/v1.2.0
 [v1.1.0]: https://github.com/fluent/fluentd-aggregator-docker-image/releases/tag/v1.1.0
 [v1.0.0]: https://github.com/fluent/fluentd-aggregator-docker-image/releases/tag/v1.0.0
