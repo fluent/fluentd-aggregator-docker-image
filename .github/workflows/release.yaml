@@ -5,178 +5,128 @@ on:
     tags:
       - v*
 
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions: read-all
+
 jobs:
-  release:
-    name: Build & Release OCI Image
-    permissions: write-all
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [alpine, debian]
+  setup:
+    name: Setup
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        shell: bash
+    outputs:
+      version: ${{ steps.setup.outputs.version }}
+    steps:
+      - name: Setup
+        id: setup
+        run: |
+          set -euo pipefail
+
+          ref_name="${{ github.ref_name }}"
+          version="${ref_name/v/}"
+
+          echo "version=${version}" >> "${GITHUB_OUTPUT}"
+
+  build:
+    name: Build
+    uses: action-stars/build-workflows/.github/workflows/build-oci-image.yaml@edcb1cca0ace2b51717e08992963b84c7e13b719 # v0.13.0
+    needs: setup
+    permissions:
+      artifact-metadata: write
+      attestations: write
+      contents: write
+      id-token: write
+      packages: write
+      security-events: write
+    with:
+      name: ${{ github.event.repository.name }}
+      repository: ${{ github.repository_owner }}
+      dockerfile: Dockerfile
+      platforms: linux/amd64,linux/arm64
+      labels: |
+        org.opencontainers.image.description=Fluentd aggregator OCI image based on the default Fluentd OCI image.
+        org.opencontainers.image.authors=Fluentd developers <fluentd@googlegroups.com>
+      tags: ${{ format('{0},latest', needs.setup.outputs.version) }}
+      scan_image: true
+      push_sbom: true
+      push_sarif: true
+      push_image: true
+
+  docker:
+    name: Docker Hub
+    needs: [build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
     defaults:
       run:
         shell: bash
     steps:
-      - name: Checkout
-        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
-
-      - name: Install Cosign
-        uses: sigstore/cosign-installer@9becc617647dfa20ae7b1151972e9b3a2c338a2b # v2.8.1
-
-      - name: Run Hadolint
-        uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf # v3.1.0
-        continue-on-error: true
+      - name: Install ghactl
+        uses: action-stars/ghactl-action@c556c5f2cfcb1f6643bdecf1bf601c706954a37a # v0.0.1
         with:
-          dockerfile: ./${{ matrix.os }}.dockerfile
-          format: sarif
-          output-file: hadolint.sarif
-          no-fail: false
+          token: ${{ github.token }}
+          version: latest
 
-      - name: Upload Hadolint SARIF report
-        uses: github/codeql-action/upload-sarif@8775e868027fa230df8586bdf502bbd9b618a477 # v2.2.3
-        with:
-          category: hadolint-${{ matrix.os }}
-          sarif_file: hadolint.sarif
-
-      - name: Generate OCI image metadata
-        id: metadata
-        uses: docker/metadata-action@507c2f2dc502c992ad446e3d7a5dfbe311567a96 # v4.3.0
-        with:
-          flavor: |
-            latest=false
-          images: |
-            ghcr.io/${{ github.repository }}
-            docker.io/${{ secrets.DOCKERHUB_REPO }}
-          tags: |
-            type=semver,pattern=${{ matrix.os }}-{{version}}
-            type=semver,pattern=${{ matrix.os }}-{{major}}.{{minor}}
-            type=semver,pattern=${{ matrix.os }}-{{major}}
-            type=raw,value=${{ matrix.os }}
-            type=semver,pattern={{version}},enable=${{ matrix.os == 'alpine' }}
-            type=semver,pattern={{major}}.{{minor}},enable=${{ matrix.os == 'alpine' }}
-            type=semver,pattern={{major}},enable=${{ matrix.os == 'alpine' }}
-            type=raw,value=latest,enable=${{ matrix.os == 'alpine' }}
-          labels: |
-            org.opencontainers.image.description=Fluentd aggregator OCI image based on the default Fluentd OCI image.
-            org.opencontainers.image.authors=Fluentd developers <fluentd@googlegroups.com>
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@e81a89b1732b9c48d79cd809d8d81d79c4647a18 # v2.1.0
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@f03ac48505955848960e80bbb68046aa35c7b9e7 # v2.4.1
-
-      - name: Build OCI image
-        id: build
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671 # v4.0.0
-        with:
-          file: ./${{ matrix.os }}.dockerfile
-          context: .
-          provenance: false
-          sbom: false
-          platforms: linux/amd64
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          tags: ${{ steps.metadata.outputs.tags }}
-          labels: ${{ steps.metadata.outputs.labels }}
-          load: true
-          push: false
-
-      - name: Generate OCI image Syft SBOM
-        uses: anchore/sbom-action@07978da4bdb4faa726e52dfc6b1bed63d4b56479 # v0.13.3
-        with:
-          image: "ghcr.io/${{ github.repository }}:${{ steps.metadata.outputs.version }}"
-          dependency-snapshot: true
-          format: spdx-json
-          artifact-name: ${{ github.event.repository.name }}-${{ matrix.os }}-syft-sbom
-          output-file: ${{ github.event.repository.name }}-${{ matrix.os }}-syft-sbom.spdx.json
-
-      - name: Scan OCI image Syft SBOM with Grype
-        id: scan
-        uses: anchore/scan-action@84aa2c1d0eba986ed2274869c27f1e35a625449f # v3.3.3
-        continue-on-error: true
-        with:
-          sbom: ${{ github.event.repository.name }}-${{ matrix.os }}-syft-sbom.spdx.json
-          severity-cutoff: medium
-          output-format: sarif
-          fail-build: true
-
-      - name: Upload Grype SARIF report
-        uses: github/codeql-action/upload-sarif@8775e868027fa230df8586bdf502bbd9b618a477 # v2.2.3
-        with:
-          category: grype-${{ matrix.os }}
-          sarif_file: ${{ steps.scan.outputs.sarif }}
-
-      - name: Fail workflow
-        if: ${{ steps.hadolint.outcome == 'failure' && steps.scan.outcome == 'failure' }}
+      - name: Install tools
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          echo "::error::Code scanning failed."
-          exit 1
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # v2.1.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          ghactl tool install --owner oras-project --repo oras --version latest
 
       - name: Login to DockerHub
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # v2.1.0
+        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4.4.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build & push OCI image
-        id: build_push
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671 # v4.0.0
-        with:
-          file: ./${{ matrix.os }}.dockerfile
-          context: .
-          provenance: false
-          sbom: false
-          platforms: linux/amd64,linux/arm64
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          tags: ${{ steps.metadata.outputs.tags }}
-          labels: ${{ steps.metadata.outputs.labels }}
-          load: false
-          push: true
-
-      - name: Sign OCI image
+      - name: Push to Docker Hub
         env:
-          COSIGN_EXPERIMENTAL: true
-        run: echo "${{ steps.metadata.outputs.tags }}" | xargs -I {} cosign sign --yes --recursive {}@${{ steps.build_push.outputs.digest }}
+          INPUT_IMAGE: ${{ needs.build.outputs.image }}
+          INPUT_DIGEST: ${{ needs.build.outputs.digest }}
+          INPUT_TAGS: ${{ needs.build.outputs.tags }}
+        run: |
+          set -euo pipefail
+
+          docker_hub_image="docker.io/fluent/fluentd-aggregator"
+
+          # shellcheck disable=SC2016
+          for tag in ${INPUT_TAGS//,/ }; do
+            oras cp --recursive "${INPUT_IMAGE}@${INPUT_DIGEST}" "${docker_hub_image}:${tag}"
+          done
 
   publish:
     name: Publish Release
-    needs: release
+    needs: [setup, build, docker]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     defaults:
       run:
         shell: bash
     steps:
       - name: Checkout
-        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
-
-      - name: Update Docker repository description
-        uses: peter-evans/dockerhub-description@93b93397c27ed52b4055b8c6b2f8d92456ab3c56 # v3.1.2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-          repository: ${{ secrets.DOCKERHUB_REPO }}
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Get changelog entry
         id: changelog_reader
-        uses: mindsers/changelog-reader-action@b97ce03a10d9bdbb07beb491c76a5a01d78cd3ef # v2.2.2
+        uses: mindsers/changelog-reader-action@1faaf50aa09d5793d9a100819973df801febfb31 # v2.4.0
         with:
           path: ./CHANGELOG.md
           version: ${{ github.ref_name }}
 
       - name: Create release
-        uses: ncipollo/release-action@a2e71bdd4e7dab70ca26a852f29600c98b33153e # v1.12.0
+        uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          allowUpdates: true
+          token: ${{ github.token }}
+          makeLatest: true
           body: ${{ steps.changelog_reader.outputs.changes }}
+          allowUpdates: false

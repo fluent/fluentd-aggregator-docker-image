@@ -1,0 +1,100 @@
+name: Build OCI Image
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions: read-all
+
+jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    outputs:
+      git_sha_short: ${{ steps.setup.outputs.git_sha_short }}
+      changed: ${{ steps.changes.outputs.any_changed }}
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 2
+
+      - name: Setup
+        id: setup
+        run: |
+          set -euo pipefail
+
+          git_sha_short="$(git rev-parse --short HEAD)"
+          echo "git_sha_short=${git_sha_short}" >> "${GITHUB_OUTPUT}"
+
+      - name: Check changes
+        id: changes
+        uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
+        with:
+          files_ignore: |-
+            .github/**
+            CHANGELOG.md
+            LICENCE
+            README.md
+
+  build:
+    name: Build
+    uses: action-stars/build-workflows/.github/workflows/build-oci-image.yaml@edcb1cca0ace2b51717e08992963b84c7e13b719 # v0.13.0
+    needs: setup
+    if: github.event_name == 'workflow_dispatch' || needs.setup.outputs.changed == 'true'
+    permissions:
+      artifact-metadata: write
+      attestations: write
+      contents: write
+      id-token: write
+      packages: write
+      security-events: write
+    with:
+      name: ${{ github.event.repository.name }}
+      repository: ${{ github.repository_owner }}
+      dockerfile: Dockerfile
+      platforms: linux/amd64,linux/arm64
+      labels: |
+        org.opencontainers.image.description=Fluentd aggregator OCI image based on the default Fluentd OCI image.
+        org.opencontainers.image.authors=Fluentd developers <fluentd@googlegroups.com>
+      tags: ${{ github.event_name != 'pull_request' && 'main' || format('sha-{0}', needs.setup.outputs.git_sha_short) }}
+      scan_image: true
+      push_sbom: true
+      push_sarif: true
+      push_image: true
+
+  check:
+    name: Check
+    needs:
+      - build
+    if: always()
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Check
+        run: |
+          set -euo pipefail
+
+          results="${{ join(needs.*.result, ' ') }}"
+
+          for result in ${results}; do
+            if [[ "$result" == "failure" ]] || [[ "$result" == "cancelled" ]]; then
+              echo "::error::Workflow failed!"
+              exit 1
+            fi
+          done

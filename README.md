@@ -11,7 +11,11 @@ A [Fluentd](https://www.fluentd.org/) [OCI](https://opencontainers.org/) image t
 
 ## Aggregation Changes
 
-To optimise _Fluentd_ for log aggregation the default `fluent.conf` file has been overwritten to allow logs to be forwarded and printed to `stdout`, an additional directory `/fluentd/state` has been created, and plugins have also been added to support the aggregation role.
+To optimize _Fluentd_ for log aggregation the default configuration has been overwritten to allow logs to be forwarded and printed to `stdout`, an additional directory `/fluentd/state` has been created, and plugins have also been added to support the aggregation role.
+
+### Versioning
+
+As of `v2.0.0` this image will follow [semantic versioning](https://semver.org/) and the base _Fluentd_ version will be treated as a dependency and not directly tracked in the versioning.
 
 ### Plugins
 
@@ -35,20 +39,39 @@ The following plugins have been added to the base image, to see the specific ver
 
 ## Usage
 
-This image is available at [Docker Hub](https://hub.docker.com/r/fluent/fluentd-aggregator); the image version matches the _Fluentd_ version that it's based on.
-
-This image can be pulled with the following commands.
+This image is available from [GHCR](https://github.com/fluent/fluentd-aggregator-docker-image/pkgs/container/fluentd-aggregator-docker-image) and [Docker Hub](https://hub.docker.com/r/fluent/fluentd-aggregator). It is intended to be used in the [fluentd-aggregator](https://artifacthub.io/packages/helm/stevehipwell-helm-charts-fluentd-aggregator/fluentd-aggregator) Helm chart. You can pull this image with the following command.
 
 ```shell
-docker pull fluent/fluentd-aggregator:latest
+docker pull ghcr.io/fluent/fluentd-aggregator-docker-image:latest
 
-docker pull ghcr.io/fluent/fluentd-aggregator:latest
+docker pull fluent/fluentd-aggregator:latest
 ```
 
-This image can be tested by running the following command and then forwarding logs.
+This image can be tested locally by running the following command and then forwarding logs to it.
 
 ```shell
-docker run -p 24224:24224 fluent/fluentd-aggregator:latest
+docker run -p 24224:24224 ghcr.io/fluent/fluentd-aggregator-docker-image:latest
+```
+
+## Validation
+
+To validate the image signature run the following commands.
+
+```shell
+cosign verify ghcr.io/fluent/fluentd-aggregator-docker-image:latest --certificate-oidc-issuer "https://token.actions.githubusercontent.com" --certificate-identity-regexp "https://github.com/action-stars/build-workflows/\.github/workflows/build-oci-image\.yaml@.+" | jq .
+```
+
+To validate the the image build provenance run the following command.
+
+```shell
+cosign verify-attestation --certificate-oidc-issuer "https://token.actions.githubusercontent.com" --certificate-identity-regexp "https://github.com/action-stars/build-workflows/\.github/workflows/build-oci-image\.yaml@.+" --new-bundle-format --type=slsaprovenance1 ghcr.io/fluent/fluentd-aggregator-docker-image:latest
+```
+
+You can validate image SBOM by running the following commands.
+
+```shell
+digest="$(crane digest --platform="linux/amd64" ghcr.io/fluent/fluentd-aggregator-docker-image:latest)"
+cosign verify-attestation --certificate-oidc-issuer "https://token.actions.githubusercontent.com" --certificate-identity-regexp "https://github.com/action-stars/build-workflows/\.github/workflows/build-oci-image\.yaml@.+" --new-bundle-format --type=https://spdx.dev/Document/v2.3 "ghcr.io/fluent/fluentd-aggregator-docker-image@${digest}"
 ```
 
 ## License
