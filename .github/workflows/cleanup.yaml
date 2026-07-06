@@ -1,0 +1,51 @@
+name: Cleanup OCI Images
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: If true, no images will be deleted.
+        type: boolean
+        required: false
+        default: false
+  schedule:
+    - cron: "0 4 * * 0"
+
+permissions: read-all
+
+jobs:
+  cleanup:
+    name: Cleanup Images
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Cleanup untagged images
+        uses: dataaxiom/ghcr-cleanup-action@d52806a0dc70b430571a37da1fde39733ffd640f # v1.2.2
+        with:
+          token: ${{ github.token }}
+          owner: ${{ github.repository_owner }}
+          repository: fluentd-aggregator
+          package: fluentd-aggregator
+          delete-untagged: true
+          delete-ghost-images: true
+          delete-partial-images: true
+          delete-orphaned-images: true
+          older-than: 1 day
+          log-level: warn
+          dry-run: ${{ inputs.dry_run || false }}
+
+      - name: Cleanup SHA tagged images
+        uses: dataaxiom/ghcr-cleanup-action@d52806a0dc70b430571a37da1fde39733ffd640f # v1.2.2
+        with:
+          token: ${{ github.token }}
+          owner: ${{ github.repository_owner }}
+          repository: fluentd-aggregator
+          package: fluentd-aggregator
+          delete-tags: sha-*
+          older-than: 7 days
+          log-level: warn
+          dry-run: ${{ inputs.dry_run || false }}

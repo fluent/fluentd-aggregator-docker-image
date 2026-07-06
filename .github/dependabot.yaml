@@ -2,26 +2,47 @@ version: 2
 updates:
   - package-ecosystem: github-actions
     directory: /
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
     schedule:
-      interval: daily
-    commit-message:
-      prefix: chore
-      include: scope
+      interval: weekly
+
   - package-ecosystem: docker
     directory: /
+    groups:
+      docker:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     schedule:
-      interval: daily
-    commit-message:
-      prefix: feat
-      include: scope
+      interval: weekly
+
   - package-ecosystem: bundler
     directory: /
-    ignore:
-      - dependency-name: async
-        versions: [">=2"]
-    commit-message:
-      prefix: feat
-      prefix-development: chore
-      include: scope
+    groups:
+      bundler:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+      bundler-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
     schedule:
-      interval: daily
+      interval: weekly
