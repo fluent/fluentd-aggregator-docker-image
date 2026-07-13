@@ -28,8 +28,8 @@ jobs:
         with:
           token: ${{ github.token }}
           owner: ${{ github.repository_owner }}
-          repository: fluentd-aggregator
-          package: fluentd-aggregator
+          repository: ${{ github.event.repository.name }}
+          package: ${{ github.event.repository.name }}
           delete-untagged: true
           delete-ghost-images: true
           delete-partial-images: true
@@ -43,8 +43,8 @@ jobs:
         with:
           token: ${{ github.token }}
           owner: ${{ github.repository_owner }}
-          repository: fluentd-aggregator
-          package: fluentd-aggregator
+          repository: ${{ github.event.repository.name }}
+          package: ${{ github.event.repository.name }}
           delete-tags: sha-*
           older-than: 7 days
           log-level: warn
