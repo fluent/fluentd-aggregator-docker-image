@@ -7,8 +7,8 @@ source "https://rubygems.org"
 # Core Gems
 gem "rake"
 gem "bundler"
-gem "libxml-ruby", "6.0.0"
 gem "oj", "3.17.3"
+gem "nokogiri", "1.19.4"
 gem "fluentd", "1.19.3"
 
 # Plugins
