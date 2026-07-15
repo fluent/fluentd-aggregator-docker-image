@@ -208,7 +208,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.19.4-x86_64-linux-gnu)
       racc (~> 1.4)
-    oj (3.17.3)
+    oj (3.17.4)
       bigdecimal (>= 3.0)
       ostruct (>= 0.2)
     opensearch-ruby (3.4.0)
@@ -253,10 +253,12 @@ GEM
     webrick (1.9.2)
     yajl-ruby (1.4.3)
     zstd-ruby (1.5.7.1)
+
 PLATFORMS
   aarch64-linux-gnu
   ruby
   x86_64-linux-gnu
+
 DEPENDENCIES
   bundler
   fluent-plugin-azure-loganalytics (= 0.7.0)
@@ -276,7 +278,7 @@ DEPENDENCIES
   fluent-plugin-sqs (= 3.0.0)
   fluentd (= 1.19.3)
   nokogiri (= 1.19.4)
-  oj (= 3.17.3)
+  oj (= 3.17.4)
   rake
 BUNDLED WITH
    2.6.9

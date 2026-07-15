@@ -7,7 +7,7 @@ source "https://rubygems.org"
 # Core Gems
 gem "rake"
 gem "bundler"
-gem "oj", "3.17.3"
+gem "oj", "3.17.4"
 gem "nokogiri", "1.19.4"
 gem "fluentd", "1.19.3"
 
