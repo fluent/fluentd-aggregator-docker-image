@@ -14,15 +14,20 @@
 
 ## [UNRELEASED]
 
+## [v2.1.0] - 2026-07-15
+
 ### Changed
 
-- Switched out `libxml-ruby` Gem for `nokogiri` Gem. ([#116](https://github.com/stevehipwell/fluentd-aggregator-docker-image/pull/116)) @stevehipwell
+- Switch `libxml-ruby` Gem for `nokogiri` Gem. ([#116](https://github.com/stevehipwell/fluentd-aggregator-docker-image/pull/116)) @stevehipwell
+- Update transient dependencies. ([#116](https://github.com/stevehipwell/fluentd-aggregator-docker-image/pull/116)) @stevehipwell
+- Update [Ruby](https://hub.docker.com/_/ruby) OCI image digest. ([#117](https://github.com/stevehipwell/fluentd-aggregator-docker-image/pull/117)) @dependabot
+- Update [oj](https://rubygems.org/gems/oj) Gem from `3.17.3` to [`3.17.4`](https://github.com/ohler55/oj/releases/tag/v3.17.4). ([#119](https://github.com/stevehipwell/fluentd-aggregator-docker-image/pull/119)) @dependabot
 
 ## [v2.0.0] - 2026-07-06
 
 ### Changed
 
-- Realigned to original [stevehipwell/fluentd-aggregator](https://github.com/stevehipwell/fluentd-aggregator) source. ([#113](https://github.com/stevehipwell/fluentd-aggregator-docker-image/pull/113)) @stevehipwell
+- Realign to original [stevehipwell/fluentd-aggregator](https://github.com/stevehipwell/fluentd-aggregator) source. ([#113](https://github.com/stevehipwell/fluentd-aggregator-docker-image/pull/113)) @stevehipwell
 
 ## [v2.0.0-rc.1] - 2026-07-06
 
@@ -59,7 +64,8 @@
 <!--
 RELEASE LINKS
 -->
-[UNRELEASED]: https://github.com/fluent/fluentd-aggregator-docker-image/compare/v2.0.0...HEAD
+[UNRELEASED]: https://github.com/fluent/fluentd-aggregator-docker-image/compare/v2.1.0...HEAD
+[v2.1.0]: https://github.com/fluent/fluentd-aggregator-docker-image/releases/tag/v2.1.0
 [v2.0.0]: https://github.com/fluent/fluentd-aggregator-docker-image/releases/tag/v2.0.0
 [v2.0.0-rc.1]: https://github.com/fluent/fluentd-aggregator-docker-image/releases/tag/v2.0.0-rc.1
 [v1.2.0]: https://github.com/fluent/fluentd-aggregator-docker-image/releases/tag/v1.2.0
