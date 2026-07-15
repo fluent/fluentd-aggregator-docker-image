@@ -14,6 +14,10 @@
 
 ## [UNRELEASED]
 
+### Changed
+
+- Switched out `libxml-ruby` Gem for `nokogiri` Gem. ([#116](https://github.com/stevehipwell/fluentd-aggregator-docker-image/pull/116)) @stevehipwell
+
 ## [v2.0.0] - 2026-07-06
 
 ### Changed

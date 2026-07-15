@@ -38,6 +38,7 @@ apt-get install -y --no-install-recommends \
   bzip2 \
   gnupg \
   dirmngr \
+  libssl-dev \
   libxml2-dev \
   libxslt1-dev
 rm -rf /var/lib/apt/lists /var/cache/apt/archives
