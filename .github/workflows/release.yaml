@@ -35,7 +35,7 @@ jobs:
 
   build:
     name: Build
-    uses: action-stars/build-workflows/.github/workflows/build-oci-image.yaml@edcb1cca0ace2b51717e08992963b84c7e13b719 # v0.13.0
+    uses: action-stars/build-workflows/.github/workflows/build-oci-image.yaml@b75de3ac9d21cf4bfc9c394c39225206633ce73d # v0.14.0
     needs: setup
     permissions:
       artifact-metadata: write
@@ -83,7 +83,7 @@ jobs:
           ghactl tool install --owner oras-project --repo oras --version latest
 
       - name: Login to DockerHub
-        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4.4.0
+        uses: docker/login-action@06fb636fac595d6fb4b28a5dfcb21a6f5091859c # v4.5.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -114,7 +114,7 @@ jobs:
         shell: bash
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Get changelog entry
         id: changelog_reader
