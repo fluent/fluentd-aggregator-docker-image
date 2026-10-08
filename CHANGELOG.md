@@ -14,6 +14,10 @@
 
 ## [UNRELEASED]
 
+### Changed
+
+- Update Ruby OCI image from `3.4.10` to [`3.4.11`](https://github.com/ruby/ruby/releases/tag/v3_4_11). ([#129](https://github.com/fluent/fluentd-aggregator-docker-image/pull/129)) @stevehipwell
+
 ## [v2.2.0] - 2026-10-01
 
 ### Changed
