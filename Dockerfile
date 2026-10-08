@@ -1,4 +1,4 @@
-FROM docker.io/library/ruby:3.4.10-slim@sha256:b573616eed67613e1d380ebb777d87aa094fad7505bdbc2d1b45dca9dd9116b9 AS base
+FROM docker.io/library/ruby:3.4.11-slim@sha256:976f45719573889b0ef02fcff5fd7a486cb09a56ad11c472d51d49604c31d6ab AS base
 
 WORKDIR /fluentd
 
