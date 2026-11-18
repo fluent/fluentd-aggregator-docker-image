@@ -8,7 +8,7 @@ source "https://rubygems.org"
 gem "rake"
 gem "bundler"
 gem "oj", "3.17.6"
-gem "nokogiri", "1.19.4"
+gem "nokogiri", "1.19.5"
 gem "fluentd", "1.19.4"
 
 # Plugins
