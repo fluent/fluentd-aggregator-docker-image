@@ -14,9 +14,21 @@
 
 ## [UNRELEASED]
 
+## [v2.3.0] - 2026-11-18
+
+### Added
+
+- Add [fluent-plugin-opentelemetry](https://rubygems.org/gems/fluent-plugin-opentelemetry). ([#139](https://github.com/fluent/fluentd-aggregator-docker-image/pull/139)) @stevehipwell
+
 ### Changed
 
-- Update Ruby OCI image from `3.4.10` to [`3.4.11`](https://github.com/ruby/ruby/releases/tag/v3_4_11). ([#129](https://github.com/fluent/fluentd-aggregator-docker-image/pull/129)) @stevehipwell
+- Update Ruby OCI image from `3.4.10` to [`3.4.11`](https://github.com/ruby/ruby/releases/tag/v3_4_11). ([#130](https://github.com/fluent/fluentd-aggregator-docker-image/pull/130)) @stevehipwell
+- Update Ruby OCI image from `3.4.11` to [`3.4.12`](https://github.com/ruby/ruby/releases/tag/v3_4_12). ([#138](https://github.com/fluent/fluentd-aggregator-docker-image/pull/138)) @stevehipwell
+- Update [fluentd](https://rubygems.org/gems/fluentd) Gem from `1.19.4` to [`1.20.1`](https://github.com/fluent/fluentd/releases/tag/v1.20.1). ([#136](https://github.com/fluent/fluentd-aggregator-docker-image/pull/136)) @dependabot
+- Update [oj](https://rubygems.org/gems/oj) Gem from `3.17.6` to [`3.17.8`](https://github.com/ohler55/oj/releases/tag/v3.17.8). ([#136](https://github.com/fluent/fluentd-aggregator-docker-image/pull/136)) @dependabot
+- Update [nokogiri](https://rubygems.org/gems/nokogiri) Gem from `1.19.4` to [`1.19.7`](https://github.com/sparklemotion/nokogiri/releases/tag/v1.19.7). ([#136](https://github.com/fluent/fluentd-aggregator-docker-image/pull/136)) @dependabot
+- Update [fluent-plugin-kafka](https://rubygems.org/gems/fluent-plugin-kafka) Gem from `0.19.8` to [`0.19.9`](https://github.com/fluent/fluent-plugin-kafka/releases/tag/v0.19.9). ([#136](https://github.com/fluent/fluentd-aggregator-docker-image/pull/136)) @dependabot
+- Update [fluent-plugin-opensearch](https://rubygems.org/gems/fluent-plugin-opensearch) Gem from `1.1.7` to [`1.1.8`](https://github.com/fluent/fluent-plugin-opensearch/releases/tag/v1.1.8). ([#136](https://github.com/fluent/fluentd-aggregator-docker-image/pull/136)) @dependabot
 
 ## [v2.2.0] - 2026-10-01
 
@@ -82,7 +94,8 @@
 <!--
 RELEASE LINKS
 -->
-[UNRELEASED]: https://github.com/fluent/fluentd-aggregator-docker-image/compare/v2.2.0...HEAD
+[UNRELEASED]: https://github.com/fluent/fluentd-aggregator-docker-image/compare/v2.3.0...HEAD
+[v2.3.0]: https://github.com/fluent/fluentd-aggregator-docker-image/releases/tag/v2.3.0
 [v2.2.0]: https://github.com/fluent/fluentd-aggregator-docker-image/releases/tag/v2.2.0
 [v2.1.0]: https://github.com/fluent/fluentd-aggregator-docker-image/releases/tag/v2.1.0
 [v2.0.0]: https://github.com/fluent/fluentd-aggregator-docker-image/releases/tag/v2.0.0
